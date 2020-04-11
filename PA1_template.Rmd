@@ -22,7 +22,7 @@ df$date<-as.Date(df$date , format = "%Y-%m-%d")
 ## What is mean total number of steps taken per day?
 a new data frame "df2" is created to contain the mean number of steps taken per day
 ```{r}
-x<-tapply(df$steps,df$date,sum)
+x<-tapply(df$steps,df$date,sum,na.rm=T)
 df2<-data.frame(date=names(x), steps=as.vector(x))
 ```
 
@@ -36,15 +36,17 @@ g<-ggplot(df2,aes(x=steps)) +
    geom_vline(data=df2,aes(xintercept = median(steps , na.rm=TRUE) ) , color="red" , size=1.2 ) +
    labs(title = "Number of steps taken each day" , x="number of steps")
 print(g)
-ggsave("figures\\plot1.png") 
 
 ```
-The mean and the median of the total number of steps taken per day :
+
+
+The mean and the median of the total number of steps taken per day represented by the blue and red lines above :
 ```{r}
 
 sprintf("Mean = %f",mean(df2$steps , na.rm=TRUE))
 sprintf("Median = %f",median(df2$steps , na.rm=TRUE))
 ```
+
 **NOTE** : in the graph above , the mean and the median are so close that their representive lines overlapped. 
 
 ## What is the average daily activity pattern?  
@@ -55,6 +57,7 @@ df3<-data.frame(interval= as.numeric(names(x)), steps= as.vector(x) )
 
 ```
 
+
 now we represent the data in a time series plot:
 ```{r}
 g<-ggplot(data=df3 , aes(x=interval , y=steps)) + 
@@ -64,7 +67,6 @@ g<-ggplot(data=df3 , aes(x=interval , y=steps)) +
 
 print(g)
 
-ggsave("figures\\plot2.png")
 ```
 
 The time interval of the day with most average steps taken is:
@@ -99,7 +101,7 @@ for(i in 1:nrow(df4))
 
 Now, with our newly filled dataset,  we calculate the mean of the number of steps taken per day again and store it in df5.
 ```{r}
-x<-tapply(df4$steps , df4$date , sum)
+x<-tapply(df4$steps , df4$date , sum , na.rm=TRUE)
 df5<-data.frame(date=names(x), steps=as.vector(x))
 ```
 and we plot the resulting data in the form of a historam.
@@ -111,7 +113,6 @@ g<-ggplot(df5, aes(steps)) +
    labs(title = "Number of steps taken each day (with ampitued NAs)" , x="number of steps")
    
    print(g)
-   ggsave("figures\\plot3.png")
 ```
 
 The mean and the median of the number of steps taken each day with ampitued data:
@@ -160,7 +161,6 @@ now we make our time series plot of the average number of steps per intervale in
      scale_x_continuous(breaks=seq(0,2355,200) )+
      labs(title="Average steps taken per interval (weekdays/weekends)", x="time interval", y="number of steps")
     print(g)
-  ggsave("figures\\plot4.png")
 ```
 
 **We can notice a slight decrease in the number of average steps taken in the morning hours of weekends compared to weekdays, which might be due to waking up late in some weekends.  

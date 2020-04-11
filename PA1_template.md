@@ -23,7 +23,7 @@ df$date<-as.Date(df$date , format = "%Y-%m-%d")
 a new data frame "df2" is created to contain the mean number of steps taken per day
 
 ```r
-x<-tapply(df$steps,df$date,sum)
+x<-tapply(df$steps,df$date,sum,na.rm=T)
 df2<-data.frame(date=names(x), steps=as.vector(x))
 ```
 
@@ -40,31 +40,17 @@ g<-ggplot(df2,aes(x=steps)) +
 print(g)
 ```
 
-```
-## Warning: Removed 8 rows containing non-finite values (stat_bin).
-```
-
 ![](PA1_template_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
 
-```r
-ggsave("figures\\plot1.png") 
-```
 
-```
-## Saving 7 x 5 in image
-```
-
-```
-## Warning: Removed 8 rows containing non-finite values (stat_bin).
-```
-The mean and the median of the total number of steps taken per day :
+The mean and the median of the total number of steps taken per day represented by the blue and red lines above :
 
 ```r
 sprintf("Mean = %f",mean(df2$steps , na.rm=TRUE))
 ```
 
 ```
-## [1] "Mean = 10766.188679"
+## [1] "Mean = 9354.229508"
 ```
 
 ```r
@@ -72,8 +58,9 @@ sprintf("Median = %f",median(df2$steps , na.rm=TRUE))
 ```
 
 ```
-## [1] "Median = 10765.000000"
+## [1] "Median = 10395.000000"
 ```
+
 **NOTE** : in the graph above , the mean and the median are so close that their representive lines overlapped. 
 
 ## What is the average daily activity pattern?  
@@ -83,6 +70,7 @@ We calculate the average number of steps per interval across all days and store 
 x<-tapply(df$steps , df$interval , mean , na.rm=TRUE)
 df3<-data.frame(interval= as.numeric(names(x)), steps= as.vector(x) )
 ```
+
 
 now we represent the data in a time series plot:
 
@@ -96,14 +84,6 @@ print(g)
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
-
-```r
-ggsave("figures\\plot2.png")
-```
-
-```
-## Saving 7 x 5 in image
-```
 
 The time interval of the day with most average steps taken is:
 
@@ -153,7 +133,7 @@ for(i in 1:nrow(df4))
 Now, with our newly filled dataset,  we calculate the mean of the number of steps taken per day again and store it in df5.
 
 ```r
-x<-tapply(df4$steps , df4$date , sum)
+x<-tapply(df4$steps , df4$date , sum , na.rm=TRUE)
 df5<-data.frame(date=names(x), steps=as.vector(x))
 ```
 and we plot the resulting data in the form of a historam.
@@ -169,14 +149,6 @@ g<-ggplot(df5, aes(steps)) +
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
-
-```r
-   ggsave("figures\\plot3.png")
-```
-
-```
-## Saving 7 x 5 in image
-```
 
 The mean and the median of the number of steps taken each day with ampitued data:
 
@@ -239,14 +211,6 @@ now we make our time series plot of the average number of steps per intervale in
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-16-1.png)<!-- -->
-
-```r
-  ggsave("figures\\plot4.png")
-```
-
-```
-## Saving 7 x 5 in image
-```
 
 **We can notice a slight decrease in the number of average steps taken in the morning hours of weekends compared to weekdays, which might be due to waking up late in some weekends.  
 we also notice a small increase in the number of steps taken in some hours of the afternoon during the weekends.**
